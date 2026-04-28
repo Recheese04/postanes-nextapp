@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { User, Mail, Lock, CheckCircle2, ArrowRight } from 'lucide-react'
 import FormInput from '../components/FormInput'
 import {
   validateName,
@@ -57,12 +59,8 @@ export default function Signup() {
       if (Object.keys(newErrors).length === 0) {
         setIsLoading(true)
         try {
-          // Simulate API call
           await new Promise((resolve) => setTimeout(resolve, 1500))
           setIsSuccess(true)
-          setTimeout(() => {
-            alert('Account created successfully! Redirecting to login...')
-          }, 500)
         } catch (err) {
           setErrors({ submit: 'Signup failed. Please try again.' })
         } finally {
@@ -74,109 +72,127 @@ export default function Signup() {
   )
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <form className="card max-w-md" onSubmit={handleSubmit} noValidate>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Create account</h1>
-          <p className="text-slate-400">Join Postanes — publish faster.</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="noise-bg" />
+      
+      {/* Background blobs */}
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none" />
 
-        {isSuccess && (
-          <div className="p-4 mb-4 rounded-lg bg-green-500/10 border border-green-500/30">
-            <p className="text-green-400 text-sm">✓ Account created successfully!</p>
-          </div>
-        )}
-
-        {errors.submit && (
-          <div className="p-4 mb-4 rounded-lg bg-red-500/10 border border-red-500/30" role="alert">
-            <p className="text-red-400 text-sm">{errors.submit}</p>
-          </div>
-        )}
-
-        <div className="space-y-5">
-          <FormInput
-            label="Full name"
-            name="name"
-            type="text"
-            placeholder="Jane Doe"
-            value={formData.name}
-            onChange={handleChange}
-            error={errors.name}
-            autoComplete="name"
-            disabled={isLoading}
-          />
-
-          <FormInput
-            label="Email address"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            value={formData.email}
-            onChange={handleChange}
-            error={errors.email}
-            autoComplete="email"
-            disabled={isLoading}
-          />
-
-          <FormInput
-            label="Password"
-            name="password"
-            type="password"
-            placeholder="Create a password"
-            value={formData.password}
-            onChange={handleChange}
-            error={errors.password}
-            strength={passwordStrength}
-            hint={passwordStrength < 3 ? 'Use uppercase, numbers, and symbols' : 'Good password'}
-            autoComplete="new-password"
-            disabled={isLoading}
-          />
-
-          <FormInput
-            label="Confirm password"
-            name="confirm"
-            type="password"
-            placeholder="Repeat password"
-            value={formData.confirm}
-            onChange={handleChange}
-            error={errors.confirm}
-            autoComplete="new-password"
-            disabled={isLoading}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`btn w-full mt-6 transition-all ${
-            isLoading ? 'opacity-75 cursor-not-allowed' : 'hover:shadow-lg hover:shadow-purple-500/30'
-          }`}
-        >
-          {isLoading ? (
-            <>
-              <svg className="w-4 h-4 inline animate-spin mr-2" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              Creating account...
-            </>
-          ) : (
-            'Create account'
-          )}
-        </button>
-
-        <p className="text-center text-slate-400 text-sm mt-6">
-          Already have an account?{' '}
-          <Link href="/login" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
-            Sign in
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md relative z-10"
+      >
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-block mb-6 text-2xl font-bold font-outfit tracking-tighter text-white">
+            POSTANES
           </Link>
-        </p>
-      </form>
+          <h1 className="text-3xl font-bold text-white font-outfit mb-2">Create account</h1>
+          <p className="text-slate-400">Join the future of publishing</p>
+        </div>
+
+        <div className="glass-card !p-8 md:!p-10">
+          <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+            <AnimatePresence mode="wait">
+              {isSuccess && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-3"
+                >
+                  <CheckCircle2 className="w-5 h-5" />
+                  Account created! Redirecting to login...
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="space-y-4">
+              <FormInput
+                label="Full name"
+                name="name"
+                type="text"
+                placeholder="Jane Doe"
+                value={formData.name}
+                onChange={handleChange}
+                error={errors.name}
+                autoComplete="name"
+                disabled={isLoading || isSuccess}
+                icon={<User className="w-4 h-4" />}
+              />
+
+              <FormInput
+                label="Email address"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                error={errors.email}
+                autoComplete="email"
+                disabled={isLoading || isSuccess}
+                icon={<Mail className="w-4 h-4" />}
+              />
+
+              <FormInput
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={handleChange}
+                error={errors.password}
+                strength={passwordStrength}
+                autoComplete="new-password"
+                disabled={isLoading || isSuccess}
+                icon={<Lock className="w-4 h-4" />}
+              />
+
+              <FormInput
+                label="Confirm password"
+                name="confirm"
+                type="password"
+                placeholder="Repeat password"
+                value={formData.confirm}
+                onChange={handleChange}
+                error={errors.confirm}
+                autoComplete="new-password"
+                disabled={isLoading || isSuccess}
+                icon={<Lock className="w-4 h-4" />}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading || isSuccess}
+              className={`btn-primary w-full group mt-2 ${
+                isLoading || isSuccess ? 'opacity-50 cursor-not-allowed shadow-none' : ''
+              }`}
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Creating account...
+                </div>
+              ) : isSuccess ? (
+                'Success'
+              ) : (
+                <div className="flex items-center gap-2">
+                  Create Account
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              )}
+            </button>
+          </form>
+
+          <p className="text-center text-slate-500 text-sm mt-8 font-medium">
+            Already have an account?{' '}
+            <Link href="/login" className="text-purple-400 hover:text-purple-300 font-bold transition-colors">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </motion.div>
     </div>
   )
 }
-

@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Mail, Lock, ArrowRight, Github } from 'lucide-react'
 import FormInput from '../components/FormInput'
 import { validateEmail, validatePassword } from '../lib/validation'
 
@@ -40,14 +42,11 @@ export default function Login() {
       if (Object.keys(newErrors).length === 0) {
         setIsLoading(true)
         try {
-          // Simulate API call
-          await new Promise((resolve) => setTimeout(resolve, 1000))
+          await new Promise((resolve) => setTimeout(resolve, 1200))
           setIsSuccess(true)
-          setTimeout(() => {
-            alert('Login successful! Redirecting...')
-          }, 500)
+          // Simulate navigation delay
         } catch (err) {
-          setErrors({ submit: 'Login failed. Please try again.' })
+          setErrors({ submit: 'Login failed. Please check your credentials.' })
         } finally {
           setIsLoading(false)
         }
@@ -57,84 +56,127 @@ export default function Login() {
   )
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <form className="card" onSubmit={handleSubmit} noValidate>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
-          <p className="text-slate-400">Sign in to continue to Postanes</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="noise-bg" />
+      
+      {/* Background blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-600/10 blur-[120px] rounded-full pointer-events-none" />
 
-        {isSuccess && (
-          <div className="p-4 mb-4 rounded-lg bg-green-500/10 border border-green-500/30">
-            <p className="text-green-400 text-sm">✓ Login successful!</p>
-          </div>
-        )}
-
-        {errors.submit && (
-          <div className="p-4 mb-4 rounded-lg bg-red-500/10 border border-red-500/30" role="alert">
-            <p className="text-red-400 text-sm">{errors.submit}</p>
-          </div>
-        )}
-
-        <div className="space-y-5">
-          <FormInput
-            label="Email address"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            value={formData.email}
-            onChange={handleChange}
-            error={errors.email}
-            autoComplete="email"
-            disabled={isLoading}
-          />
-
-          <FormInput
-            label="Password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            value={formData.password}
-            onChange={handleChange}
-            error={errors.password}
-            autoComplete="current-password"
-            disabled={isLoading}
-            hint="Must be at least 8 characters"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`btn w-full mt-6 transition-all ${
-            isLoading ? 'opacity-75 cursor-not-allowed' : 'hover:shadow-lg hover:shadow-purple-500/30'
-          }`}
-        >
-          {isLoading ? (
-            <>
-              <svg className="w-4 h-4 inline animate-spin mr-2" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              Signing in...
-            </>
-          ) : (
-            'Sign in'
-          )}
-        </button>
-
-        <p className="text-center text-slate-400 text-sm mt-6">
-          Don't have an account?{' '}
-          <Link href="/signup" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
-            Create account
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md relative z-10"
+      >
+        <div className="text-center mb-10">
+          <Link href="/" className="inline-block mb-8 text-2xl font-bold font-outfit tracking-tighter text-white">
+            POSTANES
           </Link>
-        </p>
-      </form>
+          <h1 className="text-3xl font-bold text-white font-outfit mb-2">Welcome back</h1>
+          <p className="text-slate-400">Continue your creative journey</p>
+        </div>
+
+        <div className="glass-card !p-10">
+          <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+            <AnimatePresence mode="wait">
+              {isSuccess && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-3"
+                >
+                  <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-900 font-bold">✓</div>
+                  Login successful! Redirecting...
+                </motion.div>
+              )}
+              
+              {errors.submit && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
+                >
+                  {errors.submit}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="space-y-4">
+              <FormInput
+                label="Email address"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                error={errors.email}
+                autoComplete="email"
+                disabled={isLoading || isSuccess}
+                icon={<Mail className="w-4 h-4" />}
+              />
+
+              <FormInput
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                error={errors.password}
+                autoComplete="current-password"
+                disabled={isLoading || isSuccess}
+                icon={<Lock className="w-4 h-4" />}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading || isSuccess}
+              className={`btn-primary w-full group ${
+                isLoading || isSuccess ? 'opacity-50 cursor-not-allowed shadow-none scale-100' : ''
+              }`}
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Signing in...
+                </div>
+              ) : isSuccess ? (
+                'Success'
+              ) : (
+                <div className="flex items-center gap-2">
+                  Sign In
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              )}
+            </button>
+
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/5"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-[#0c1221] px-2 text-slate-500 font-bold tracking-widest">Or continue with</span>
+              </div>
+            </div>
+
+            <button 
+              type="button"
+              className="btn-secondary w-full flex items-center justify-center gap-3 !py-3"
+            >
+              <Github className="w-5 h-5" />
+              GitHub
+            </button>
+          </form>
+
+          <p className="text-center text-slate-500 text-sm mt-8">
+            New here?{' '}
+            <Link href="/signup" className="text-purple-400 hover:text-purple-300 font-bold transition-colors">
+              Create an account
+            </Link>
+          </p>
+        </div>
+      </motion.div>
     </div>
   )
 }
-

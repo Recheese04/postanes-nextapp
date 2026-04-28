@@ -1,147 +1,195 @@
 import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Zap, Palette, BarChart3, ChevronRight, CheckCircle2 } from 'lucide-react'
 
 export default function Home() {
   const features = [
     {
-      icon: '⚡',
+      icon: <Zap className="w-6 h-6 text-yellow-400" />,
       title: 'Lightning Fast',
       description: 'Optimized editor with instant saves and real-time collaboration',
     },
     {
-      icon: '🎨',
+      icon: <Palette className="w-6 h-6 text-purple-400" />,
       title: 'Beautiful Templates',
       description: 'Choose from professionally designed themes for any topic',
     },
     {
-      icon: '📊',
+      icon: <BarChart3 className="w-6 h-6 text-cyan-400" />,
       title: 'Rich Analytics',
       description: 'Track readers, engagement, and growth with detailed stats',
     },
   ]
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-dark">
-      <nav className="app-wrap">
-        <div className="flex justify-end gap-3">
+    <div className="min-h-screen relative overflow-hidden">
+      <div className="noise-bg" />
+      
+      {/* Navbar */}
+      <nav className="relative z-10 app-wrap py-8 flex justify-between items-center">
+        <div className="text-2xl font-bold font-outfit tracking-tighter bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+          POSTANES
+        </div>
+        <div className="flex items-center gap-4">
           <Link href="/login" className="nav-link">
-            Login
+            Log in
           </Link>
-          <Link href="/signup" className="nav-link">
-            Sign up
+          <Link href="/signup" className="px-5 py-2 rounded-full bg-white/10 border border-white/10 text-sm font-semibold hover:bg-white/15 transition-all">
+            Get Started
           </Link>
         </div>
       </nav>
 
-      <section className="app-wrap pt-12 pb-20">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <div className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-purple-400 uppercase tracking-wider">
-                Open Beta
-              </div>
+      {/* Hero Section */}
+      <section className="relative z-10 app-wrap pt-20 pb-32">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="space-y-10"
+          >
+            <div className="space-y-6">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-bold text-purple-400 uppercase tracking-widest"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                </span>
+                Introducing Open Beta
+              </motion.div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
-                Publishing,{' '}
-                <span className="bg-gradient-to-r from-purple-500 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                  reinvented
+              <h1 className="text-6xl md:text-7xl font-extrabold font-outfit text-white leading-[1.1] tracking-tight">
+                Publishing,<br />
+                <span className="bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                  reinvented.
                 </span>
               </h1>
 
-              <p className="text-lg text-slate-300 leading-relaxed max-w-lg">
-                Postanes is a modern publishing platform designed for creators, writers, and teams. Write, publish, and
-                grow your audience with beautiful, fast, and collaborative tools.
+              <p className="text-xl text-slate-400 leading-relaxed max-w-xl font-medium">
+                Postanes is the modern canvas for your thoughts. Beautiful typography, lightning speed, and a clutter-free experience for creators.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/signup"
-                className="btn text-center py-4 px-6 text-base font-semibold hover:shadow-lg hover:shadow-purple-500/40"
-              >
-                Start creating for free
+            <div className="flex flex-col sm:flex-row gap-5">
+              <Link href="/signup" className="btn-primary group">
+                Start Creating Free
+                <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link
-                href="/login"
-                className="btn-secondary text-center py-4 px-6 text-base font-semibold hover:bg-white/10"
-              >
-                View docs
+              <Link href="/login" className="btn-secondary">
+                View Documentation
               </Link>
             </div>
 
-            <div className="flex items-center gap-6 text-sm text-slate-400">
+            <div className="flex flex-wrap items-center gap-8 text-sm font-medium text-slate-500">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">✓</div>
-                <span>Free to start</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">✓</div>
+                <CheckCircle2 className="w-4 h-4 text-emerald-500/60" />
                 <span>No credit card</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">✓</div>
-                <span>24/7 support</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-500/60" />
+                <span>Custom domains</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500/60" />
+                <span>24/7 Support</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="hidden md:block">
-            <div className="relative">
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-cyan-600/20 blur-2xl rounded-2xl"
-                aria-hidden
-              />
-              <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-sm">
-                <svg width="100%" height="100%" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="heroGrad" x1="0%" x2="100%" y1="0%" y2="100%">
-                      <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.8" />
-                      <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.8" />
-                    </linearGradient>
-                  </defs>
-                  <rect x="0" y="0" width="500" height="400" fill="url(#heroGrad)" opacity="0.1" />
-                  <rect x="20" y="20" width="460" height="50" rx="8" fill="rgba(255,255,255,0.08)" />
-                  <rect x="20" y="90" width="200" height="20" rx="4" fill="rgba(255,255,255,0.15)" />
-                  <rect x="20" y="130" width="460" height="200" rx="8" fill="rgba(255,255,255,0.05)" />
-                </svg>
+          {/* Hero Visual */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, rotateY: 20 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="hidden lg:block perspective-1000"
+          >
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+              <div className="relative glass-card border-white/20 p-2 overflow-hidden aspect-[4/3] flex items-center justify-center">
+                <div className="w-full h-full rounded-2xl bg-slate-900/50 flex flex-col p-6 space-y-4">
+                  <div className="flex items-center gap-2 border-b border-white/5 pb-4">
+                    <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-4 w-1/3 bg-white/10 rounded-full animate-pulse" />
+                    <div className="h-4 w-full bg-white/5 rounded-full" />
+                    <div className="h-4 w-full bg-white/5 rounded-full" />
+                    <div className="h-20 w-full bg-white/[0.03] rounded-xl" />
+                  </div>
+                  <div className="flex-1" />
+                  <div className="h-10 w-full bg-gradient-to-r from-purple-600/20 to-cyan-500/20 rounded-xl border border-white/5" />
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-20 border-t border-white/5">
+      {/* Features Section */}
+      <section className="py-32 relative z-10 border-t border-white/[0.05]">
         <div className="app-wrap">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Everything you need to publish</h2>
-            <p className="text-lg text-slate-400 max-w-lg mx-auto">
-              Powerful features built for modern creators and teams
+          <div className="text-center mb-20 space-y-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white font-outfit">Everything you need</h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+              Powerful tools built into a seamless experience. Focus on writing, we handle the rest.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="p-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/2 hover:border-white/20 hover:bg-white/8 transition-all duration-300 group"
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            {features.map((feature, idx) => (
+              <motion.div
+                key={idx}
+                variants={itemVariants}
+                className="glass-card group"
               >
-                <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">{feature.icon}</div>
-                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{feature.description}</p>
-              </div>
+                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-purple-500/30 transition-all duration-500">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3 font-outfit">{feature.title}</h3>
+                <p className="text-slate-400 leading-relaxed text-sm">
+                  {feature.description}
+                </p>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-16 border-t border-white/5">
-        <div className="app-wrap text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">Ready to start publishing?</h2>
-          <p className="text-slate-400 mb-8">Join thousands of creators already publishing on Postanes</p>
-          <Link href="/signup" className="btn py-4 px-8 text-lg font-semibold hover:shadow-lg hover:shadow-purple-500/40">
-            Create account
-          </Link>
+      {/* Footer */}
+      <footer className="py-16 border-t border-white/[0.05] relative z-10 text-center">
+        <div className="app-wrap">
+          <p className="text-slate-500 text-sm">
+            &copy; 2026 Postanes. All rights reserved. Built for the modern web.
+          </p>
         </div>
-      </section>
+      </footer>
     </div>
   )
 }
